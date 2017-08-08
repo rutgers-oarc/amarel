@@ -198,7 +198,7 @@ Currently Loaded Modules:
 #SBATCH --requeue                    # Return job to the queue if preempted
 #SBATCH --job-name=zipx001a          # Assign an short name to your job
 #SBATCH --nodes=1                    # Number of nodes you require
-#SBATCH --ntasks=1                   # Number of tasks you'll launch on each node
+#SBATCH --ntasks=1                   # Total # of tasks across all nodes
 #SBATCH --cpus-per-task=1            # Cores per task (>1 if multithread tasks)
 #SBATCH --mem=2000                   # Real memory (RAM) required (MB)
 #SBATCH --time=02:00:00              # Total run time limit (HH:MM:SS)
@@ -238,7 +238,7 @@ $ sbatch my-job-script.sh</code></pre></figure>
 #SBATCH --requeue                    # Return job to the queue if preempted
 #SBATCH --job-name=zipx001a          # Assign an short name to your job
 #SBATCH --nodes=1                    # Number of nodes you require
-#SBATCH --ntasks=16                  # Number of tasks you'll launch on each node
+#SBATCH --ntasks=16                  # Total # of tasks across all nodes
 #SBATCH --cpus-per-task=1            # Cores per task (>1 if multithread tasks)
 #SBATCH --mem=124000                 # Real memory (RAM) required (MB)
 #SBATCH --time=02:00:00              # Total run time limit (HH:MM:SS)
@@ -392,7 +392,7 @@ export MANPATH=/home/[NetID]/zipper/4.1.5/share/man:$MANPATH</code></pre></figur
 #SBATCH --partition=main                # Partition (job queue)
 #SBATCH --job-name=gmdrun               # Assign an 8-character name to your job
 #SBATCH --nodes=1                       # Number of nodes
-#SBATCH --ntasks=16                     # Processes (usually cores) on each node
+#SBATCH --ntasks=16                     # Total # of tasks across all nodes
 #SBATCH --cpus-per-task=1               # Threads per process (or per core)
 #SBATCH --mem=124000                    # Memory per node (MB)
 #SBATCH --time=00:20:00                 # Total run time limit (HH:MM:SS)
