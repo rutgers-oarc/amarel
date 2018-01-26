@@ -422,7 +422,7 @@ export MANPATH=/home/[NetID]/zipper/4.1.5/share/man:$MANPATH</code></pre></figur
 
 
                 <div class=bs-docs-section>
-                    <h1 class=page-header id=examplerungromacs>Example: Running GROMACS</h1>
+                    <h1 class=page-header id=examples>Example: Running GROMACS</h1>
                     <p>Here is a simple example procedure that demonstrates how to use GROMACS 2016 on Amarel. In this example, we’ll start with a downloaded PDB file and proceed through importing that file into GROMACS, solvating the protein, a quick energy minimization, and then an MD equilibration. This example is not intended to teach anyone how to use GROMACS. Instead, it is intended to assist new GROMACS users in learning to use GROMACS on Amarel.</p>
                     <p>(1) Download a PDB file.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>wget https://files.rcsb.org/view/5EWT.pdb</code></pre></figure>
@@ -490,6 +490,77 @@ gmx_mpi mdrun -v -s 5EWT_solv_equil.tpr -o 5EWT_solv_equil.trr -c 5EWT_solv_equi
                 </div>
 
 
+
+<div class=bs-docs-section>
+<h1 class=page-header id=examplerungromacs>Example: Running TensorFlow with a GPU</h1>
+<p>To do this, you can use the <a href=http://singularity.lbl.gov>Singularity</a> container manager and a Docker image containing the TensorFlow software. Begin by loading the Singulary module:</p>
+
+<figure class=highlight><pre><code class=language-html data-lang=html>module load singularity/.2.4-PR1106</code></pre></figure>
+
+<p>Running Singularity can be done in batch mode using a job script. Below is an exmample job script for this purpose (for this example, we'll name this script TF_gpu.sh)</p>
+ 
+<figure class=highlight><pre><code class=language-html data-lang=html>
+#!/bin/bash
+#SBATCH --partition=main             # Partition (job queue)
+#SBATCH --no-requeue                 # Do not re-run job  if preempted
+#SBATCH --job-name=TF_gpu            # Assign an short name to your job
+#SBATCH --nodes=1                    # Number of nodes you require
+#SBATCH --ntasks=1                   # Total # of tasks across all nodes
+#SBATCH --cpus-per-task=2            # Cores per task (>1 if multithread tasks)
+#SBATCH --gres=gpu:1                 # Number of GPUs
+#SBATCH --mem=16000                  # Real memory (RAM) required (MB)
+#SBATCH --time=00:30:00              # Total run time limit (HH:MM:SS)
+#SBATCH --output=slurm.%N.%j.out     # STDOUT output file
+#SBATCH --error=slurm.%N.%j.err      # STDERR output file (optional)
+#SBATCH --export=ALL                 # Export you current env to the job env
+
+srun singularity exec --nv docker://tensorflow/tensorflow:1.4.1-gpu python <your *.py file>
+</code></pre></figure>
+
+<p>Once your job script is ready, submit it using the sbatch command:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>
+$ sbatch TF_gpu.sh</code></pre></figure>
+
+<p>Alternatively, you can run Singularity interactively:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>
+$ srun --pty -p main --gres=gpu:1 --time=15:00 --mem=6G singularity shell --nv docker://tensorflow/tensorflow:1.4.1-gpu
+
+Docker image path: index.docker.io/tensorflow/tensorflow:1.4.1-gpu
+Cache folder set to /home/user/.singularity/docker
+Creating container runtime...
+Importing: /home/user/.singularity/docker/sha256:054be6183d067af1af06196d7123f7dd0b67f7157a0959bd857ad73046c3be9a.tar.gz
+Importing: /home/user/.singularity/docker/sha256:779578d7ea6e8cc3934791724d28c56bbfc8b1a99e26236e7bf53350ed839b98.tar.gz
+Importing: /home/user/.singularity/docker/sha256:82315138c8bd2f784643520005a8974552aaeaaf9ce365faea4e50554cf1bb44.tar.gz
+Importing: /home/user/.singularity/docker/sha256:88dc0000f5c4a5feee72bae2c1998412a4b06a36099da354f4f97bdc8f48d0ed.tar.gz
+Importing: /home/user/.singularity/docker/sha256:79f59e52a355a539af4e15ec0241dffaee6400ce5de828b372d06c625285fd77.tar.gz
+Importing: /home/user/.singularity/docker/sha256:ecc723991ca554289282618d4e422a29fa96bd2c57d8d9ef16508a549f108316.tar.gz
+Importing: /home/user/.singularity/docker/sha256:d0e0931cb377863a3dbadd0328a1f637387057321adecce2c47c2d54affc30f2.tar.gz
+Importing: /home/user/.singularity/docker/sha256:f7899094c6d8f09b5ac7735b109d7538f5214f1f98d7ded5756ee1cff6aa23dd.tar.gz
+Importing: /home/user/.singularity/docker/sha256:ecba77e23ded968b9b2bed496185bfa29f46c6d85b5ea68e23a54a505acb81a3.tar.gz
+Importing: /home/user/.singularity/docker/sha256:037240df6b3d47778a353e74703c6ecddbcca4d4d7198eda77f2024f97fc8c3d.tar.gz
+Importing: /home/user/.singularity/docker/sha256:b1330cb3fb4a5fe93317aa70df2d6b98ac3ec1d143d20030c32f56fc49b013a8.tar.gz
+Importing: /home/user/.singularity/metadata/sha256:b71a53c1f358230f98f25b41ec62ad5c4ba0b9d986bbb4fb15211f24c386780f.tar.gz
+Singularity: Invoking an interactive shell within container...
+
+Singularity tensorflow:latest-gpu:~> 
+</code></pre></figure>
+
+<p>Now, you're ready to execute commands:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>
+Singularity tensorflow:latest-gpu:~> python -V
+Python 2.7.12
+Singularity tensorflow:latest-gpu:~> python3 -V
+Python 3.5.2
+</code></pre></figure>
+
+<p>Please remember to exit from your interactive job after you are finished with your calculations.</p>
+
+<p>There are several Docker images available on Amarel for use with Singularity. The one used in the example above, tensorflow1.4.1-gpu, is intended for python 2.7.12. If you want to use Python3, you'll need a different image, docker://tensorflow/tensorflow:1.4.1-gpu-py3, and the Python command will be 'python3' instead of 'python' in your script.</p>
+</div>     
+
+
+
+
                 <div class=bs-docs-section>
                     <h1 class=page-header id=citing>Acknowledging Amarel</h1>
                     <p>Please reference OARC and the Amarel cluster in any research report, journal or publication that requires citation of an author's work. Recognizing the OARC resources you used to conduct your research is important for our process of acquiring funding for hardware, support services, and other infrastructure improvements. The minimal content of a reference should include:</p>
@@ -517,7 +588,7 @@ gmx_mpi mdrun -v -s 5EWT_solv_equil.tpr -o 5EWT_solv_equil.trr -c 5EWT_solv_equi
                         <li> <a href=#monitoringjobs>Monitoring jobs</a> </li>
                         <li> <a href=#killingjobs>Killing jobs</a></li>
                         <li> <a href=#installingsoftware>Installing software</a> </li>
-                        <li> <a href=#examplerungromacs>Running GROMACS</a> </li>
+                        <li> <a href=#examples>Examples</a> </li>
                         <li> <a href=#citing>Acknowledging Amarel</a> </li>
                     </ul> <a href=#top class=back-to-top> Back to top </a> </nav>
             </div>
