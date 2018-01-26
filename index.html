@@ -492,7 +492,7 @@ gmx_mpi mdrun -v -s 5EWT_solv_equil.tpr -o 5EWT_solv_equil.trr -c 5EWT_solv_equi
 
 
 <div class=bs-docs-section>
-<h1 class=page-header id=examplerungromacs>Example: Running TensorFlow with a GPU</h1>
+<h1 class=page-header >Example: Running TensorFlow with a GPU</h1>
 <p>To do this, you can use the <a href=http://singularity.lbl.gov>Singularity</a> container manager and a Docker image containing the TensorFlow software. Begin by loading the Singulary module:</p>
 
 <figure class=highlight><pre><code class=language-html data-lang=html>module load singularity/.2.4-PR1106</code></pre></figure>
@@ -559,6 +559,23 @@ Python 3.5.2
 </div>     
 
 
+                <div class=bs-docs-section>
+                    <h1 class=page-header id=troubleshooting>Troubleshooting / Common Problems</h1>
+                    <p class=lead>Failure to load module dependencies/prerequisites:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>                    
+$ module load R-Project/3.4.1
+Lmod has detected the following error:  These module(s) exist but cannot be loaded as requested: "R-Project/3.4.1"
+Try: "module spider R-Project/3.4.1" to see how to load the module(s).</code></pre></figure>
+<p>This software module has a prerequiste module that must be loaded first. To find out what prerequisite module is required, use the 'module spider' command followed by the name of the module you're trying to load:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>                    
+$ module spider R-Project/3.4.1
+    This module can only be loaded through the following modules:
+      intel/17.0.4
+    Help: 
+      This module loads the installation R-Project 3.3.3 compiled with the Intel 17.0.4 compilers.
+</code></pre></figure>
+<p>Ah-ha, it looks like the intel/17.0.4 module must be loaded before loading R-Project/3.4.1</p>
+                </div>
 
 
                 <div class=bs-docs-section>
@@ -589,6 +606,7 @@ Python 3.5.2
                         <li> <a href=#killingjobs>Killing jobs</a></li>
                         <li> <a href=#installingsoftware>Installing software</a> </li>
                         <li> <a href=#examples>Examples</a> </li>
+                        <li> <a href=#troubleshooting>Troubleshooting</a> </li>
                         <li> <a href=#citing>Acknowledging Amarel</a> </li>
                     </ul> <a href=#top class=back-to-top> Back to top </a> </nav>
             </div>
