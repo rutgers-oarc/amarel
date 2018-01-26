@@ -449,10 +449,10 @@ h4 code {
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
     background-color: #6f5499;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#000000), to(#507cb2));
-    background-image: -webkit-linear-gradient(top, #000000 0, #507cb2 100%);
-    background-image: -o-linear-gradient(top, #000000 0, #507cb2 100%);
-    background-image: linear-gradient(to bottom, #000000 0, #507cb2 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#000000), to(#cc0033));
+    background-image: -webkit-linear-gradient(top, #000000 0, #cc0033 100%);
+    background-image: -o-linear-gradient(top, #000000 0, #cc0033 100%);
+    background-image: linear-gradient(to bottom, #000000 0, #cc0033 100%);
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#cc0033', GradientType=0);
     background-repeat: repeat-x
 }
