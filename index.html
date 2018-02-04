@@ -424,6 +424,103 @@ export MANPATH=/home/[NetID]/zipper/4.1.5/share/man:$MANPATH</code></pre></figur
                 </div>
 
 
+
+
+                <div class=bs-docs-section>
+                    <h1 class=page-header id=singularity>Singularity</h1>
+                    <p><a href=http://singularity.lbl.gov>Singularity</a> is a Linux containerization tool suitable for HPC environments. It uses its own container format and also has features that enable importing Docker containers.</p>
+                    <p><a href=https://www.docker.com>Docker</a> is a platform that employs features of the Linux kernel to run software in a container. The software housed in a docker container is not standalone program but an entire OS distribution, or at least enough of the OS to enable the program to work. Docker can be thought of as somewhat like a software distribution mechanism like yum or apt. It also can be thought of as an expanded version of a chroot jail, or a reduced version of a virtual machine.</p>
+
+					<h3>Important differences between Docker and Singularity:</h3>
+
+				    <p><ul><li>Docker and Singularity have their own container formats.</li>
+				    <li>Docker containers can be imported and run using Singularity.</li>
+				    <li>Docker containers usually run as root, which means you cannot run Docker on a shared computing system (cluster).</li>
+				    <li>Singularity allows for containers that can be run as a regular user. How? When importing a Docker container, Singularity removes any elements which can only run as root. The resulting containers can be run using a regular user account.</li></ul></p>
+
+					<h3>Importing a Docker image:</h3>
+
+					<p>If you have a pre-built Docker container, you can use Singularity to convert this container to the Singularity format. Once that's done, you can upload your Singularity container to your storage space on Amarel and run jobs using that container.</p>
+
+					<p>Here's an example. NOTE that most of these steps are performed on your local system, not while logged-in on Amarel.</p>
+
+					<p>If you need to use any of Amarel's filesystems inside your container, you will need to make sure the appropriate directories exist in your container so those filesystems can be mounted using those directories.</p>
+
+					<p>Start your container (in this example we will use ubuntu:latest) and create directories for mounting /scratch/gc563 and /projects/oarc. Of course, you'll need to use directories that you can access on Amarel.</p>
+
+					<figure class=highlight><pre><code class=language-html data-lang=html>$ sudo docker run -it ubuntu:latest bash
+root@11a87dkw8748:/# mkdir -p /scratch/gc563 /projects/oarc</code></pre></figure>
+
+					<h3>Exporting your Docker image</h3>
+
+					<p>Find the name of your Docker image using the 'docker ps' command,</p>
+
+					<figure class=highlight><pre><code class=language-html data-lang=html>$ sudo docker ps
+CONTAINER ID  IMAGE          COMMAND  CREATED        STATUS        NAMES
+11a87dkw8748  ubuntu:latest  "bash"   2 minutes ago  Up 2 minutes  bendakaya_pakodi</code></pre></figure>
+
+					<p>In this example the name of the images is bendakaya_pakodi. Export this image to a tarball,</p>
+
+					<figure class=highlight><pre><code class=language-html data-lang=html>$ sudo docker export bendakaya_pakodi > ubuntu.tar</code></pre></figure>
+
+					<h3>Converting to a Singularity image</h3>
+
+					<p>You will need to have Singularity installed on your local workstation/laptop to prepare your image. The 'create' and 'import' operations of Singularity require root privileges, which you do not have on Amamel.</p>
+
+					<p>Create an empty singularity image, and then import the exported docker image into it,</p>
+
+					<figure class=highlight><pre><code class=language-html data-lang=html>$ sudo singularity create ubuntu.img
+Creating a sparse image with a maximum size of 1024MiB...
+Using given image size of 1024
+Formatting image (/sbin/mkfs.ext3)
+Done. Image can be found at: ubuntu.img
+$ sudo singularity import ubuntu.img ubuntu.tar</code></pre></figure>
+
+
+					<h3>Using Singularity containers inside a SLURM job</h3>
+
+					<p><a href=#movingfiles>Transfer</a> your new Singularity image to Amarel. The following steps are performed while logged-in to Amarel.</p>
+
+					<p>Before starting a job with sbatch, ensure that you have loaded the Singularity module,</p>
+
+<figure class=highlight><pre><code class=language-html data-lang=html>module load singularity/.2.4-PR1106</code></pre></figure>
+
+					<p>You can run any task/program inside the container by prefacing it with 'singularity exec [your image name]'
+
+					<p>Here is a simple example job script that executes commands inside a container,</p>
+
+<figure class=highlight><pre><code class=language-html data-lang=html>#SBATCH --partition=main             # Partition (job queue)
+#SBATCH --job-name=sing2me           # Assign an short name to your job
+#SBATCH --nodes=1                    # Number of nodes you require
+#SBATCH --ntasks=1                   # Total # of tasks across all nodes
+#SBATCH --cpus-per-task=1            # Cores per task (>1 if multithread tasks)
+#SBATCH --mem=4000                   # Real memory (RAM) required (MB)
+#SBATCH --time=00:30:00              # Total run time limit (HH:MM:SS)
+#SBATCH --output=slurm.%N.%j.out     # STDOUT output file
+
+## Where am I running?
+srun singularity exec ubuntu.img hostname
+
+## What is the current time and date?
+srun singularity exec ubuntu.img date</code></pre></figure>
+
+					<p>If you created directories for any Amarel filesystems, you should find they are mounted inside your container,</p>
+
+<figure class=highlight><pre><code class=language-html data-lang=html>$ mount | grep gpfs
+/dev/scratch/gc563 on /scratch/gc563 type gpfs (rw,relatime)
+/dev/projects/oarc on /projects/oarc type gpfs (rw,relatime)</code></pre></figure>
+
+					<p> NOTE: If your container mounts Amarel directories, software inside the container may be able to destroy data on these filesystems for which you have write permissions. Proceed with caution.</p>
+
+                </div>
+
+
+
+
+
+
+
+
                 <div class=bs-docs-section>
                     <h1 class=page-header id=examples>Example: Running GROMACS</h1>
                     <p>Here is a simple example procedure that demonstrates how to use GROMACS 2016 on Amarel. In this example, we’ll start with a downloaded PDB file and proceed through importing that file into GROMACS, solvating the protein, a quick energy minimization, and then an MD equilibration. This example is not intended to teach anyone how to use GROMACS. Instead, it is intended to assist new GROMACS users in learning to use GROMACS on Amarel.</p>
@@ -608,6 +705,7 @@ $ module spider R-Project/3.4.1
                         <li> <a href=#monitoringjobs>Monitoring jobs</a> </li>
                         <li> <a href=#killingjobs>Killing jobs</a></li>
                         <li> <a href=#installingsoftware>Installing software</a> </li>
+                        <li> <a href=#singularity>Using Singularity</a> </li>
                         <li> <a href=#examples>Examples</a> </li>
                         <li> <a href=#troubleshooting>Troubleshooting</a> </li>
                         <li> <a href=#citing>Acknowledging Amarel</a> </li>
