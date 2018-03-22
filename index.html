@@ -532,7 +532,7 @@ srun singularity exec ubuntu.img date</code></pre></figure>
                     <figure class=highlight><pre><code class=language-html data-lang=html>wget https://files.rcsb.org/view/5EWT.pdb</code></pre></figure>
                     <p>(2) Load the GROMACS softare module plus any needed prerequisites.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>module purge
-                    module load intel/17.0.1 mvapich2/2.2 gromacs/2016.1</code></pre></figure>
+module load intel/17.0.1 mvapich2/2.2 gromacs/2016.1</code></pre></figure>
                     <p>(3) Import the PDB into GROMACS, while defining the force field and water model to be used for this system.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>gmx_mpi pdb2gmx -f 5EWT.pdb -ff charmm27 -water tip3p -ignh -o 5EWT.gro -p 5EWT.top -i 5EWT.itp</code></pre></figure>
                     <p>(4) Increase the size of the unit cell to accomodate a reasonable volume of solvent around the protein.</p>
