@@ -261,6 +261,9 @@ Currently Loaded Modules:
 
 cd /scratch/[your NetID]
 
+module purge
+module load intel/16.0.3 fftw/3.3.1
+
 srun /scratch/[your NetID]/zipper/2.4.1/bin/zipper < my-input-file.in</code></pre></figure>
                     <p>Understanding this job script:</p>
                     <p>A job script contains the instructions for the SLURM workload manager (cluster job scheduler) to manage resource allocation, scheduling, and execution of your job.</p>
@@ -270,13 +273,11 @@ srun /scratch/[your NetID]/zipper/2.4.1/bin/zipper < my-input-file.in</code></pr
                     <p>This job will only use 1 CPU core and should not require much memory, so I have requested only 2 GB of RAM — it’s a good practice to request only about 2 GB per core for any job unless you know that your job will require more than that.</p>
                     <p>My job will be terminated when the run time limit has been reached, even if the program I’m running is not finished. It is not possible to extend this time after a job starts running.</p>
                     <p>Any output that would normally go to the command line will be redirected into the output file I have specified, and that file will be named using the compute node name and the job ID number.</p>
+                    <p>Be sure to configure your environment as needed for running your application/executable. This usually means loading any needed modules before the step where you run your application/executable.</p>
                     <br>
                     <p>Here’s how to run a serial batch job, loading modules and using the <strong>sbatch</strong> command:</p>
 
-                    <p>First, be sure to confiure your environment as needed for running your job. This usually means loading any needed modules.</p>
-                    <figure class=highlight><pre><code class=language-html data-lang=html>$ module purge
-$ module load intel/16.0.3 fftw/3.3.1
-$ sbatch my-job-script.sh</code></pre></figure>
+                    <figure class=highlight><pre><code class=language-html data-lang=html>$ sbatch my-job-script.sh</code></pre></figure>
                     <p>The <strong>sbatch</strong> command reads the contents of your job script and forwards those instructions to the SLURM workload manager. Depending on the level of activity on the cluster, your job may wait in the job queue for mintues or hours before it begins running.</p>
                 </div>
 
@@ -301,17 +302,19 @@ $ sbatch my-job-script.sh</code></pre></figure>
 
 cd /scratch/[your NetID]
 
+module purge
+module load intel/16.0.3 fftw/3.3.1 mvapich2/2.1
+
 srun --mpi=pmi2 /scratch/[your NetID]/zipper/2.4.1/bin/zipper < my-input-file.in</code></pre></figure>
                     <p>Understanding this job script:</p>
                     <p>The srun command is used to coordinate communication among the parallel tasks of your job. You must specify how many tasks you will be using, and this number usually matches the –ntasks value in your job’s hardware allocation request.</p>
                     <p>This job will use 16 CPU cores and nearly 8 GB of RAM per core, so I have requested a total of 124 GB of RAM — it’s a good practice to request only about 2 GB per core for any job unless you know that your job will require more than that.</p>
+                    <p>Note here that I’m also loading the module for the parallel communication libraries (MPI libraries) needed by my parallel executable.</p>
                     <br>
                     <p>Here’s how to run a parallel batch job, loading modules and using the <strong>sbatch</strong> command:</p>
 
-                    <figure class=highlight><pre><code class=language-html data-lang=html>$ module purge
-$ module load intel/16.0.3 fftw/3.3.1 mvapich2/2.1
+                    <figure class=highlight><pre><code class=language-html data-lang=html>
 $ sbatch my-job-script.sh</code></pre></figure>
-                    <p>Note here that I’m also loading the module for the parallel communication libraries (MPI libraries) needed by my parallel executable.</p>
                 </div>
 
 
@@ -484,10 +487,6 @@ $ sudo singularity import ubuntu.img ubuntu.tar</code></pre></figure>
 
 					<p><a href=#movingfiles>Transfer</a> your new Singularity image to Amarel. The following steps are performed while logged-in to Amarel.</p>
 
-					<p>Before starting a job with sbatch, ensure that you have loaded the Singularity module,</p>
-
-<figure class=highlight><pre><code class=language-html data-lang=html>module load singularity/.2.4.5</code></pre></figure>
-
 					<p>You can run any task/program inside the container by prefacing it with 'singularity exec [your image name]'
 
 					<p>Here is a simple example job script that executes commands inside a container,</p>
@@ -500,6 +499,9 @@ $ sudo singularity import ubuntu.img ubuntu.tar</code></pre></figure>
 #SBATCH --mem=4000                   # Real memory (RAM) required (MB)
 #SBATCH --time=00:30:00              # Total run time limit (HH:MM:SS)
 #SBATCH --output=slurm.%N.%j.out     # STDOUT output file
+
+module purge
+module load singularity/.2.4.5
 
 ## Where am I running?
 srun singularity exec ubuntu.img hostname
@@ -529,15 +531,13 @@ srun singularity exec ubuntu.img date</code></pre></figure>
                     <p>Here is a simple example procedure that demonstrates how to use GROMACS 2016 on Amarel. In this example, we’ll start with a downloaded PDB file and proceed through importing that file into GROMACS, solvating the protein, a quick energy minimization, and then an MD equilibration. This example is not intended to teach anyone how to use GROMACS. Instead, it is intended to assist new GROMACS users in learning to use GROMACS on Amarel.</p>
                     <p>(1) Download a PDB file.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>wget https://files.rcsb.org/view/5EWT.pdb</code></pre></figure>
-                    <p>(2) Load the GROMACS 2016 module and its prerequisite modules.</p>
-                    <figure class=highlight><pre><code class=language-html data-lang=html>module load intel/17.0.1 mvapich2/2.2 gromacs/2016.1</code></pre></figure>
-                    <p>(3) Import the PDB into GROMACS, while defining the force field and water model to be used for this system.</p>
+                    <p>(2) Import the PDB into GROMACS, while defining the force field and water model to be used for this system.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>gmx_mpi pdb2gmx -f 5EWT.pdb -ff charmm27 -water tip3p -ignh -o 5EWT.gro -p 5EWT.top -i 5EWT.itp</code></pre></figure>
-                    <p>(4) Increase the size of the unit cell to accomodate a reasonable volume of solvent around the protein.</p>
+                    <p>(3) Increase the size of the unit cell to accomodate a reasonable volume of solvent around the protein.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>gmx_mpi editconf -f 5EWT.gro -o 5EWT_newbox.gro -box 10 10 10 -center 5 5 5</code></pre></figure>
-                    <p>(5) Now add water molecules into the empty space in the unit cell to solvate the protein.</p>
+                    <p>(4) Now add water molecules into the empty space in the unit cell to solvate the protein.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>gmx_mpi solvate -cp 5EWT_newbox.gro -p 5EWT.top -o 5EWT_solv.gro</code></pre></figure>
-                    <p>(6) Prepare your SLURM job script(s). The 2 <strong>mdrun</strong> commands in the following steps can be executed from within an interactive session or they can be run in batch mode using job scripts. If your <strong>mdrun</strong> commands/job might take more than a few minutes to run, it would be best to run them in batch mode using a job script. Here’s an example job script for a GROMACS MD simulation. To run the 2 <strong>mdrun</strong> commands below, simply replace the example <strong>mdrun</strong> command in this script with one of the <strong>mdrun</strong> commands from the steps below and submit that job after preparing the simulation with the appropriate <strong>grompp</strong> step.</p>
+                    <p>(5) Prepare your SLURM job script(s). The 2 <strong>mdrun</strong> commands in the following steps can be executed from within an interactive session or they can be run in batch mode using job scripts. If your <strong>mdrun</strong> commands/job might take more than a few minutes to run, it would be best to run them in batch mode using a job script. Here’s an example job script for a GROMACS MD simulation. To run the 2 <strong>mdrun</strong> commands below, simply replace the example <strong>mdrun</strong> command in this script with one of the <strong>mdrun</strong> commands from the steps below and submit that job after preparing the simulation with the appropriate <strong>grompp</strong> step.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>#!/bin/bash
 #SBATCH --partition=main                # Partition (job queue)
 #SBATCH --job-name=gmdrun               # Assign an 8-character name to your job
@@ -548,6 +548,9 @@ srun singularity exec ubuntu.img date</code></pre></figure>
 #SBATCH --time=00:20:00                 # Total run time limit (HH:MM:SS)
 #SBATCH --output=slurm.%N.%j.out        # combined STDOUT and STDERR output file
 #SBATCH --export=ALL                    # Export you current env to the job env
+
+module purge
+module load intel/17.0.1 mvapich2/2.2 gromacs/2016.1
 srun --mpi=pmi2 gmx_mpi mdrun -v -s 5EWT_solv_prod.tpr \
                 -o 5EWT_solv_prod.trr -c 5EWT_solv_prod.gro \
                 -e 5EWT_solv_prod.edr -g 5EWT_solv_prod.md.log</code></pre></figure>
@@ -596,10 +599,7 @@ gmx_mpi mdrun -v -s 5EWT_solv_equil.tpr -o 5EWT_solv_equil.trr -c 5EWT_solv_equi
 
 <div class=bs-docs-section>
 <h1 class=page-header >Example: Running TensorFlow with a GPU</h1>
-<p>To do this, you can use the <a href=http://singularity.lbl.gov>Singularity</a> container manager and a Docker image containing the TensorFlow software. Begin by loading the Singulary module:</p>
-
-<figure class=highlight><pre><code class=language-html data-lang=html>module load singularity/.2.4-PR1106</code></pre></figure>
-
+<p>To do this, you can use the <a href=http://singularity.lbl.gov>Singularity</a> container manager and a Docker image containing the TensorFlow software.</p>
 <p>Running Singularity can be done in batch mode using a job script. Below is an exmample job script for this purpose (for this example, we'll name this script TF_gpu.sh)</p>
  
 <figure class=highlight><pre><code class=language-html data-lang=html>
@@ -616,6 +616,9 @@ gmx_mpi mdrun -v -s 5EWT_solv_equil.tpr -o 5EWT_solv_equil.trr -c 5EWT_solv_equi
 #SBATCH --output=slurm.%N.%j.out     # STDOUT output file
 #SBATCH --error=slurm.%N.%j.err      # STDERR output file (optional)
 #SBATCH --export=ALL                 # Export you current env to the job env
+
+module purge
+module load singularity/.2.4.5
 
 srun singularity exec --nv docker://tensorflow/tensorflow:1.4.1-gpu python <your *.py file>
 </code></pre></figure>
