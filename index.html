@@ -53,7 +53,7 @@
                 <h1 class=page-header id=status>Need Help?</h1>
                 <p class=lead>Send us a Message</p>
 
-                <p>Please contact our support team at <a href="mailto:help@hpc.rutgers.edu">help@hpc.rutgers.edu</a> and be sure to include "Perceval" somewhere in the subject line. Messages sent to this address will be seen by all members of our support team and whomever can best address your request will respond. Support is typically availalbe 9am-5pm ET Mon-Fri.</p><br>
+                <p>Please contact our support team at <a href="mailto:help@hpc.rutgers.edu">help@hpc.rutgers.edu</a> and be sure to include "Perceval" somewhere in the subject line. Messages sent to this address will be seen by all members of our support team and whomever can best address your request will respond. Support is typically available 9am-5pm ET Mon-Fri.</p><br>
 
                 <p class=lead>An important note about Email</p>
                 <p>You must use an official Rutgers email account to communicate with the Amarel support team. The University's <a href=http://policies.rutgers.edu/7011-currentpdf-0>Acceptable Use Policy</a> states that all University business be conducted using the Official University email and calendar service, Rutgers Connect. This is necessary in order to meet federal, state and local, legal, regulatory and statutory requirements (e.g., HIPAA, OPRA, FERPA, GLBA); and in a manner which ensures business continuity, enables proper E-Discovery, and handles data in a secure and compliant manner.</p><br>
@@ -111,7 +111,7 @@
                     <figure class=highlight><pre><code class=language-html data-lang=html>scp [NetID]@amarel.rutgers.edu:/home/[NetID]/file-1.txt  . </code></pre></figure>
                     <p>If you want to copy an entire directory and its contents using scp, you’ll need to “package” your directory into a single, compressed file before moving it:</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>tar -czf my-directory.tar.gz my-directory</code></pre></figure>
-                    <p>After moving it, you can “unpackage” that .tar.gz file to get your original directory and contents:</p>
+                    <p>After moving it, you can unpack that .tar.gz file to get your original directory and contents:</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>tar -xzf my-directory.tar.gz</code></pre></figure>
                     <p>A handy way to synchronize a local file or entire directory between your local workstation and the Amarel cluster is to use the rsync utility. First, let's sync a local (recently updated) directory with the same directory stored on Amarel:</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>rsync -trlvpz work-dir gc563@amarel.rutgers.edu:/home/gc563/work-dir</code></pre></figure>
@@ -267,7 +267,7 @@ srun /scratch/[your NetID]/zipper/2.4.1/bin/zipper < my-input-file.in</code></pr
                     <p>A job script contains the instructions for the SLURM workload manager (cluster job scheduler) to manage resource allocation, scheduling, and execution of your job.</p>
                     <p>The lines beginning with #SBATCH contain commands intended only for the workload manager.</p>
                     <p>My job will be assigned to the “main” partition (job queue).
-                    <p>If this job is preempted, it will be retuned to the job queue and will start again when required resources are available</p>
+                    <p>If this job is preempted, it will be returned to the job queue and will start again when required resources are available</p>
                     <p>This job will only use 1 CPU core and should not require much memory, so I have requested only 2 GB of RAM — it’s a good practice to request only about 2 GB per core for any job unless you know that your job will require more than that.</p>
                     <p>My job will be terminated when the run time limit has been reached, even if the program I’m running is not finished. It is not possible to extend this time after a job starts running.</p>
                     <p>Any output that would normally go to the command line will be redirected into the output file I have specified, and that file will be named using the compute node name and the job ID number.</p>
@@ -275,7 +275,7 @@ srun /scratch/[your NetID]/zipper/2.4.1/bin/zipper < my-input-file.in</code></pr
                     <br>
                     <p>Here’s how to run a serial batch job, loading modules and using the <strong>sbatch</strong> command:</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>$ sbatch my-job-script.sh</code></pre></figure>
-                    <p>The <strong>sbatch</strong> command reads the contents of your job script and forwards those instructions to the SLURM workload manager. Depending on the level of activity on the cluster, your job may wait in the job queue for mintues or hours before it begins running.</p>
+                    <p>The <strong>sbatch</strong> command reads the contents of your job script and forwards those instructions to the SLURM workload manager. Depending on the level of activity on the cluster, your job may wait in the job queue for minutes or hours before it begins running.</p>
                 </div>
 
 
@@ -432,7 +432,7 @@ export MANPATH=/home/[NetID]/zipper/4.1.5/share/man:$MANPATH</code></pre></figur
                 <div class=bs-docs-section>
                     <h1 class=page-header id=singularity>Singularity</h1>
                     <p><a href=http://singularity.lbl.gov>Singularity</a> is a Linux containerization tool suitable for HPC environments. It uses its own container format and also has features that enable importing Docker containers.</p>
-                    <p><a href=https://www.docker.com>Docker</a> is a platform that employs features of the Linux kernel to run software in a container. The software housed in a docker container is not standalone program but an entire OS distribution, or at least enough of the OS to enable the program to work. Docker can be thought of as somewhat like a software distribution mechanism like yum or apt. It also can be thought of as an expanded version of a chroot jail, or a reduced version of a virtual machine.</p>
+                    <p><a href=https://www.docker.com>Docker</a> is a platform that employs features of the Linux kernel to run software in a container. The software housed in a Docker container is not standalone program but an entire OS distribution, or at least enough of the OS to enable the program to work. Docker can be thought of as somewhat like a software distribution mechanism like yum or apt. It also can be thought of as an expanded version of a chroot jail, or a reduced version of a virtual machine.</p>
 
 					<h3>Important differences between Docker and Singularity:</h3>
 
@@ -468,7 +468,7 @@ CONTAINER ID  IMAGE          COMMAND  CREATED        STATUS        NAMES
 
 					<h3>Converting to a Singularity image</h3>
 
-					<p>You will need to have Singularity installed on your local workstation/laptop to prepare your image. The 'create' and 'import' operations of Singularity require root privileges, which you do not have on Amamel.</p>
+					<p>You will need to have Singularity installed on your local workstation/laptop to prepare your image. The 'create' and 'import' operations of Singularity require root privileges, which you do not have on Amarel.</p>
 
 					<p>Create an empty singularity image, and then import the exported docker image into it,</p>
 
@@ -528,12 +528,12 @@ srun singularity exec ubuntu.img date</code></pre></figure>
                     <p>Here is a simple example procedure that demonstrates how to use GROMACS 2016 on Amarel. In this example, we’ll start with a downloaded PDB file and proceed through importing that file into GROMACS, solvating the protein, a quick energy minimization, and then an MD equilibration. This example is not intended to teach anyone how to use GROMACS. Instead, it is intended to assist new GROMACS users in learning to use GROMACS on Amarel.</p>
                     <p>(1) Download a PDB file.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>wget https://files.rcsb.org/view/5EWT.pdb</code></pre></figure>
-                    <p>(2) Load the GROMACS softare module plus any needed prerequisites.</p>
+                    <p>(2) Load the GROMACS software module plus any needed prerequisites.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>module purge
 module load intel/17.0.1 mvapich2/2.2 gromacs/2016.1</code></pre></figure>
                     <p>(3) Import the PDB into GROMACS, while defining the force field and water model to be used for this system.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>gmx_mpi pdb2gmx -f 5EWT.pdb -ff charmm27 -water tip3p -ignh -o 5EWT.gro -p 5EWT.top -i 5EWT.itp</code></pre></figure>
-                    <p>(4) Increase the size of the unit cell to accomodate a reasonable volume of solvent around the protein.</p>
+                    <p>(4) Increase the size of the unit cell to accommodate a reasonable volume of solvent around the protein.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>gmx_mpi editconf -f 5EWT.gro -o 5EWT_newbox.gro -box 10 10 10 -center 5 5 5</code></pre></figure>
                     <p>(5) Now add water molecules into the empty space in the unit cell to solvate the protein.</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>gmx_mpi solvate -cp 5EWT_newbox.gro -p 5EWT.top -o 5EWT_solv.gro</code></pre></figure>
@@ -554,7 +554,7 @@ module load intel/17.0.1 mvapich2/2.2 gromacs/2016.1
 srun --mpi=pmi2 gmx_mpi mdrun -v -s 5EWT_solv_prod.tpr \
                 -o 5EWT_solv_prod.trr -c 5EWT_solv_prod.gro \
                 -e 5EWT_solv_prod.edr -g 5EWT_solv_prod.md.log</code></pre></figure>
-                    <p>(7) Peform an inital, quick energy minimization. Here, we’re using a customized MD parameters file named em.mdp, which contains these instructions:</p>
+                    <p>(7) Perform an inital, quick energy minimization. Here, we’re using a customized MD parameters file named em.mdp, which contains these instructions:</p>
                     <figure class=highlight><pre><code class=language-html data-lang=html>integrator     = steep
 nsteps         = 200
 cutoff-scheme  = Verlet
@@ -600,7 +600,7 @@ gmx_mpi mdrun -v -s 5EWT_solv_equil.tpr -o 5EWT_solv_equil.trr -c 5EWT_solv_equi
 <div class=bs-docs-section>
 <h1 class=page-header >Example: Running TensorFlow with a GPU</h1>
 <p>To do this, you can use the <a href=http://singularity.lbl.gov>Singularity</a> container manager and a Docker image containing the TensorFlow software.</p>
-<p>Running Singularity can be done in batch mode using a job script. Below is an exmample job script for this purpose (for this example, we'll name this script TF_gpu.sh)</p>
+<p>Running Singularity can be done in batch mode using a job script. Below is an example job script for this purpose (for this example, we'll name this script TF_gpu.sh)</p>
  
 <figure class=highlight><pre><code class=language-html data-lang=html>
 #!/bin/bash
@@ -672,7 +672,7 @@ Python 3.5.2
 $ module load R-Project/3.4.1
 Lmod has detected the following error:  These module(s) exist but cannot be loaded as requested: "R-Project/3.4.1"
 Try: "module spider R-Project/3.4.1" to see how to load the module(s).</code></pre></figure>
-<p>This software module has a prerequiste module that must be loaded first. To find out what prerequisite module is required, use the 'module spider' command followed by the name of the module you're trying to load:</p>
+<p>This software module has a prerequisite module that must be loaded first. To find out what prerequisite module is required, use the 'module spider' command followed by the name of the module you're trying to load:</p>
 <figure class=highlight><pre><code class=language-html data-lang=html>                    
 $ module spider R-Project/3.4.1
     This module can only be loaded through the following modules:
