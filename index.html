@@ -598,20 +598,20 @@ I can use a web search to find the source tarballs for these packages. For examp
 <br>
 <p class=lead>Installing your own build of R:</p>
 
-<p>For some users or groups, installing and customizing or even modifying the latest version (or a secific version) of R is necessary. For those users, I'll demonstrate how to install a version of R below.</p>
+<p>For some users or groups, installing and customizing or even modifying the latest version (or a specific version) of R is necessary. For those users, I'll demonstrate how to install a version of R below.</p>
 
-<p>Here are the commands to use for installing R-3.5.0 from source:</p>
-<figure class=highlight><pre><code class=language-html data-lang=html>wget https://cran.r-project.org/src/base/R-3/R-3.5.0.tar.gz
-tar -zxf R-3.5.0.tar.gz
-cd R-3.5.0
-module load intel/17.0.4 java/1.8.0_141
-./configure --prefix=/home/gc563/R/3.5.0
+<p>Here are the commands to use for installing R-3.4.4 from source:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>wget https://cran.r-project.org/src/base/R-3/R-3.4.4.tar.gz
+tar -zxf R-3.4.4.tar.gz
+cd R-3.4.4
+module load gcc/5.4 java/1.8.0_161
+./configure --prefix=/home/gc563/R/3.4.4 --enable-java
 make -j 4
 make install
 cd ..
-rm -rf R-3.5.0*</code></pre></figure>
+rm -rf R-3.4.4*</code></pre></figure>
 
-<p>Here, I have loaded the Intel compiler suite and Java before installing R. This is an optional step and I did it because there might be specific tools I will use with R that require these extra software packages.</p>
+<p>Here, I have loaded the GCC compiler suite and Java before installing R. This is an optional step and I did it because there might be specific tools I will use with R that require these extra software packages.</p>
 <p>When I configured my installation, I specified (with --prefix=) that I want R to be installed in my /home directory. I prefer to use a [package]/[version] structure because that enables easy organization of multiple verisons of any software package. It's a personal preference.</p>
 <p>At the end of my install procedure, I remove the downloaded install package and tarball, just to tidy-up.</p>
 
