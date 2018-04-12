@@ -618,6 +618,29 @@ rm -rf R-3.4.4*</code></pre></figure>
 <br>
 <p>Since I've installed R in my /home directory, I can add packages using the default library directory since that too will be in my /home directory.</p>
 
+<br>
+<p>Before using my new R installation, I'll need to set some environment variables and load needed modules (the same ones I used for building my R installation). This can be done from the command line (but the settings won't persist after you log-out) or by adding these commands to the bottom of your ~/.bashrc file (so the settings will persist):</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>module load gcc/5.4 java/1.8.0_161
+export PATH=/home/gc563/R/3.4.4/bin:$PATH
+export LIBRARY_PATH=/home/gc563/R/3.4.4/lib64
+export LD_LIBRARY_PATH=/home/gc563/R/3.4.4/lib64
+export MANPATH=/home/gc563/R/3.4.4/share/man</code></pre></figure>
+<p>If you're adding these lines to the bottom of your ~/.bashrc file, log-out and log-in again, then verify that the settings are working:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>$ module list
+Currently Loaded Modules:
+  1) gcc/5.4   2) java/1.8.0_161
+$ which R
+~/R/3.4.4/bin/R</code></pre></figure>
+
+<p>Now that my new R installation is setup, I can begin adding R packages. Since this is my own installation of R and not one of the preinstalled versions available on the cluster, my default packages/libraries directory is /home/gc563/R/3.4.4/lib64/R/library</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>> .libPaths()
+[1] "/home/gc563/R/3.4.4/lib64/R/library"</code></pre></figure>
+<p>Install a package:</p>
+
+<figure class=highlight><pre><code class=language-html data-lang=html>> install.packages("rJava")
+> library(rJava)
+> </code></pre></figure>
+
 
 
 
