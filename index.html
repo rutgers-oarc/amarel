@@ -563,6 +563,25 @@ srun singularity exec ubuntu.img date</code></pre></figure>
 $ which R
 /opt/sw/packages/intel-17.0.4/R-Project/3.4.1/bin/R</code></pre></figure>
 
+
+<p>What R packages are already installed?</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>> pkgs <- installed.packages ()
+> pkgs[,c("Package", "Version")]
+
+                     Package                Version    
+base                 "base"                 "3.4.4"    
+BH                   "BH"                   "1.66.0-1" 
+Biobase              "Biobase"              "2.38.0"   
+BiocGenerics         "BiocGenerics"         "0.24.0"   
+BiocInstaller        "BiocInstaller"        "1.28.0"   
+BiocParallel         "BiocParallel"         "1.12.0"   
+Biostrings           "Biostrings"           "2.46.0"   
+bitops               "bitops"               "1.0-6"    
+boot                 "boot"                 "1.3-20"   
+BSgenome             "BSgenome"             "1.46.0"
+...</code></pre></figure>
+
+
 <p>It's very common for uers to need additional or custom packages for a base R installation. On a large, shared computing system, users are unable to install (write) to the usual places where R places new packages by default (/usr/local or /usr/lib). Therefore, managing your own local package/library installation location is necessary. In the example below, I'll demonstrate how I did this for my Amarel user account.</p>
 
 <p>First, I'll create a directory where I can store my locally-installed R packages. This can have any name and it can be located anywhere you have access:</p>
