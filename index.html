@@ -665,8 +665,7 @@ $ which R
 <p class=lead>Saving figures/plots from R (without a display):</p>
 <p>Need to save a PDF, PostScript, SVG, PNG, JPG, or TIFF file in your working directory? Normally, writing a graphics file from R requires a display of some kind and the X11 protocol. That's often not convenient for batch jobs running on the cluster. Alternatively, you can use the Cairo graphics device/library for R. Cairo enables you to write bitmap or vector graphics directly to a file. Here's an example:</p>
 <figure class=highlight><pre><code class=language-html data-lang=html>$ R --no-save
-> options(bitmapType='cairo')
-> png("my-figure.png")
+> png('my-figure.png', type='cairo')
 > plot(rnorm(10),rnorm(10))
 > dev.off()
 > q()</code></pre></figure>
