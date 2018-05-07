@@ -673,6 +673,65 @@ $ which R
 
 
 
+
+
+
+<br>
+<h2>Example: Using Python</h2>
+<p>Generally, there are 2 approaches for using Python and its associated tools: (1) use one of the pre-installed Python modules (version 2.7.x or 3.5.x) which come bundled with a very broad range of common and useful tools (you can add or update packages if needed) or (2) install your own custom build of Python in your /home directory or in a shared directory (e.g., /projects/[group] or /projects/community).</p>
+
+<p class=lead>Using pre-installed Python modules:</p>
+
+<p>With the pre-installed Python modules, you can add or update Python modules/packages as needed if you do it using the '--user' option for pip. This option will instruct pip to install new software or upgrades in your ~/.local directory. Here's an example where I'm installing the Django package:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>$ module load python/3.5.2
+$ pip install --user Django</code></pre></figure>
+
+<p>Note: if necessary, pip can also be upgraded when using a system-installed build of Python, but be aware that the upgraded version of pip will be installed in ~/.local/bin. Whenever a system-installed Pytyon module is loaded, the PATH location of that module's executables (like pip) will precede your ~/.local/bin directory. To run the upgraded version of pip, you'll need to specify its location because the previous version of pip will no longer work properly:
+<figure class=highlight><pre><code class=language-html data-lang=html>$ which pip
+/opt/sw/packages/gcc-4.8/python/3.5.2/bin/pip
+$ pip --version
+pip 9.0.3 from /opt/sw/packages/gcc-4.8/python/3.5.2/lib/python3.5/site-packages (python 3.5)
+$ pip install -U --user pip
+Successfully installed pip-10.0.1
+$ which pip
+/opt/sw/packages/gcc-4.8/python/3.5.2/bin/pip
+$ pip --version
+Traceback (most recent call last):
+  File "/opt/sw/packages/gcc-4.8/python/3.5.2/bin/pip", line 7, in <module>
+    from pip import main
+ImportError: cannot import name 'main'
+
+$ .local/bin/pip --version
+pip 10.0.1 from /home/gc563/.local/lib/python3.5/site-packages/pip (python 3.5)
+$ .local/bin/pip install --user Django
+</code></pre></figure>
+
+<p class=lead>Building your own Python installation:</p>
+
+<p>Using this approach, I must specify that I want Python to be installed in my /home directory. This is done using the '--prefix=' option. Also, I prefer to use a [package]/[version] naming scheme because that enables easy organization of multiple verisons of Python (optional, it's just a personal preference).</p>
+<p>At the end of my install procedure, I remove the downloaded install package and tarball, just to tidy-up.</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz
+tar -zxf Python-3.6.5.tgz
+cd Python-3.6.5
+./configure --prefix=/home/gc563/python/3.6.5
+make -j 4
+make install
+cd ..
+rm -rf Python-3.6.5*</code></pre></figure>
+
+<p>Before using my new Python installation, I'll need to set or edit some environment variables. This can be done from the command line (but the settings won't persist after you log-out) or by adding these commands to the bottom of your ~/.bashrc file (so the settings will persist):</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>export PATH=/home/gc563/python/3.6.5/bin:$PATH
+export LD_LIBRARY_PATH=/home/gc563/python/3.6.5/lib
+export MANPATH=/home/gc563/python/3.6.5/share/man</code></pre></figure>
+<p>If you're adding these lines to the bottom of your ~/.bashrc file, log-out and log-in again, then verify that the settings are working:</p>
+<figure class=highlight><pre><code class=language-html data-lang=html>$ which python3
+~/python/3.6.5/bin</code></pre></figure>
+
+
+
+
+
+
 <br>
                     <h2 class=page-header>Example: Running GROMACS</h2>
                     <p>Here is a simple example procedure that demonstrates how to use GROMACS 2016 on Amarel. In this example, we’ll start with a downloaded PDB file and proceed through importing that file into GROMACS, solvating the protein, a quick energy minimization, and then an MD equilibration. This example is not intended to teach anyone how to use GROMACS. Instead, it is intended to assist new GROMACS users in learning to use GROMACS on Amarel.</p>
